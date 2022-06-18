@@ -9,7 +9,7 @@ const addNoteHandler = (request, h) => {
   const updatedAt = createdAt;
 
   const newNote = {
-    id, title, createdAt, updatedAt, tags, notes,
+    id, title, createdAt, updatedAt, tags, body,
   };
 
   notes.push(newNote);
