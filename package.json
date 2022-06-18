@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon server.js",
+    "start": "nodemon src/server.js",
     "lint": "eslint ./"
   },
   "keywords": [],
@@ -16,5 +16,8 @@
     "eslint-plugin-import": "^2.26.0",
     "eslit": "^6.0.0",
     "nodemon": "^2.0.16"
+  },
+  "dependencies": {
+    "@hapi/hapi": "^20.2.2"
   }
 }
