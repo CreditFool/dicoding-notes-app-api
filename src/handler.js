@@ -1,5 +1,6 @@
-const { nanoid } = require('nanoid');
-const notes = require('./notes');
+import { nanoid } from 'nanoid';
+
+import notes from './notes';
 
 const addNoteHandler = (request, h) => {
   const { title, tags, body } = request.payload;
@@ -36,4 +37,94 @@ const addNoteHandler = (request, h) => {
   return response;
 };
 
-module.exports = addNoteHandler;
+const getAllNoteHandler = () => ({
+  status: 'success',
+  data: {
+    notes,
+  },
+});
+
+const getNoteByIdHandler = (request, h) => {
+  const { id } = request.params;
+
+  const note = notes.filter((n) => n.id === id)[0];
+
+  if (note !== undefined) {
+    const response = h.response({
+      status: 'success',
+      data: {
+        note,
+      },
+    });
+    return response;
+  }
+
+  const response = h.response({
+    status: 'fail',
+    message: 'Catatan tidak ditemukan',
+  });
+  response.code(404);
+  return response;
+};
+
+const editNoteHandler = (request, h) => {
+  const { id } = request.params;
+  const { title, tags, body } = request.payload;
+  const updatedAt = new Date().toISOString();
+
+  const index = notes.findIndex((note) => note.id === id);
+
+  if (index !== -1) {
+    notes[index] = {
+      ...notes[index],
+      title,
+      tags,
+      body,
+      updatedAt,
+    };
+
+    const response = h.response({
+      status: 'success',
+      message: 'Catatan berhasil diperbaharui',
+    });
+    return response;
+  }
+
+  const response = h.response({
+    status: 'fail',
+    message: 'Gagal memperbarui catatan. Id catatan tidak ditemukan',
+  });
+  response.code(404);
+  return response;
+};
+
+const deleteNoteHandler = (request, h) => {
+  const { id } = request.params;
+
+  const index = notes.findIndex((note) => note.id === id);
+
+  if (index !== -1) {
+    notes.splice(index, 1);
+
+    const response = h.response({
+      status: 'success',
+      message: 'Catatan berhasil dihapus',
+    });
+    return response;
+  }
+
+  const response = h.response({
+    status: 'fail',
+    message: 'Gagal menghapus catatan. Id catatan tidak ditemukan',
+  });
+  response.code(404);
+  return response;
+};
+
+export {
+  addNoteHandler,
+  getAllNoteHandler,
+  getNoteByIdHandler,
+  editNoteHandler,
+  deleteNoteHandler,
+};
